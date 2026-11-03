@@ -1,5 +1,6 @@
 <title>Nordic Konferenz Frankfurt 2026 Delegate Guide</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<meta name="google" content="notranslate">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;500;700&family=Open+Sans:wght@400;700&display=swap">
@@ -267,8 +268,9 @@ body.editing main .wrap{padding-bottom:110px}
 <script id="hb-app">
 const APP_SRC = document.currentScript.textContent;
 const ORIG = document.getElementById('hb-data').textContent;
+document.documentElement.setAttribute('translate','no'); document.documentElement.classList.add('notranslate'); document.body.classList.add('notranslate');
 let ALL = JSON.parse(ORIG); const LANGS = (ALL.de && ALL.en) ? ['de','en'] : null;
-let lang = LANGS ? (()=>{ try { const v = localStorage.getItem('hb-lang'); return LANGS.includes(v) ? v : LANGS[0]; } catch(_) { return LANGS[0]; } })() : 'en';
+let lang = LANGS ? (()=>{ try { const v = sessionStorage.getItem('hb-lang'); return LANGS.includes(v) ? v : LANGS[0]; } catch(_) { return LANGS[0]; } })() : 'en';
 let D = LANGS ? ALL[lang] : ALL;
 const UI_DE = {"To confirm":"Zu bestätigen","At a glance":"Auf einen Blick","Times to remember":"Wichtige Zeiten","Tomorrow":"Morgen","Today":"Heute","days":"Tage","until":"bis","See the":"Was gerade läuft, sehen Sie im","programme":"Programm","for what's on now":"","Now":"Jetzt","Next":"Als Nächstes","Choose a day":"Tag wählen","Our speakers":"Unsere Referenten","speakers across the conference. Each card shows when they are on stage.":"Referentinnen und Referenten. Jede Karte zeigt, wann sie auf der Bühne stehen.","Getting there":"Anreise","Around the venue":"Rund um den Veranstaltungsort","From the airport":"Vom Flughafen","Going home":"Rückreise","Open in Google Maps ↗":"In Google Maps öffnen ↗","in Google Maps ↗":"in Google Maps ↗","Practical information":"Praktische Informationen","Emergency: police, fire, ambulance":"Notruf: Polizei, Feuerwehr, Rettungsdienst","Contacts":"Kontakt","Copy":"Kopieren","Copied":"Kopiert","Share the conference":"Teilen Sie die Konferenz","Simplified map. Walking times at an easy pace.":"Vereinfachte Karte. Gehzeiten bei gemütlichem Tempo."};
 const U = s => (lang==='de' && UI_DE[s] != null) ? UI_DE[s] : s;
@@ -550,7 +552,7 @@ document.addEventListener('keydown', e => {
 
 document.addEventListener('click', e => {
   const lb = e.target.closest('[data-lang]');
-  if (lb){ if (editing && dirty) return; lang = lb.dataset.lang; D = ALL[lang]; try { localStorage.setItem('hb-lang', lang); } catch(_) {} selDay = null; render(); return; }
+  if (lb){ if (editing && dirty) return; lang = lb.dataset.lang; D = ALL[lang]; try { sessionStorage.setItem('hb-lang', lang); } catch(_) {} selDay = null; render(); return; }
   if (e.target.closest('#eddl')){ downloadHTML(); return; }
   if (e.target.closest('#edstart')){ editing = true; dirty = false; barNote=''; render(); return; }
   const add = e.target.closest('[data-add]');
@@ -605,7 +607,7 @@ function buildDoc(){
   const json = JSON.stringify(LANGS ? ALL : D).replace(/</g, '\\u003c');
   const head = '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>';
   return head + '\n<title>' + esc(document.title) + '</title>\n'
-    + '<meta name="claude:viewport-fit-sides" content="cover">\n'
+    + '<meta name="claude:viewport-fit-sides" content="cover">\n<meta name="google" content="notranslate">\n'
     + '<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
     + '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;500;700&family=Open+Sans:wght@400;700&display=swap">\n'
     + '<style id="hb-style">' + document.getElementById('hb-style').textContent + '</style>\n\n'
