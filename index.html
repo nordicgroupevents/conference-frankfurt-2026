@@ -313,6 +313,7 @@ let D = LANGS ? ALL[lang] : ALL;
 const UI_DE = {"To confirm":"Zu bestätigen","At a glance":"Auf einen Blick","Times to remember":"Wichtige Zeiten","Tomorrow":"Morgen","Today":"Heute","days":"Tage","until":"bis","See the":"Was gerade läuft, sehen Sie im","programme":"Programm","for what's on now":"","Now":"Jetzt","Next":"Als Nächstes","Choose a day":"Tag wählen","Our speakers":"Unsere Referenten","speakers across the conference. Each card shows when they are on stage.":"Referentinnen und Referenten. Jede Karte zeigt, wann sie auf der Bühne stehen.","Getting there":"Anreise","Around the venue":"Rund um den Veranstaltungsort","From the airport":"Vom Flughafen","Going home":"Rückreise","Open in Google Maps ↗":"In Google Maps öffnen ↗","in Google Maps ↗":"in Google Maps ↗","Practical information":"Praktische Informationen","Emergency: police, fire, ambulance":"Notruf: Polizei, Feuerwehr, Rettungsdienst","Contacts":"Kontakt","Copy":"Kopieren","Copied":"Kopiert","Share the conference":"Teilen Sie die Konferenz","Simplified map. Walking times at an easy pace.":"Vereinfachte Karte. Gehzeiten bei gemütlichem Tempo.","Download":"Herunterladen","Or copy our address:":"Oder kopieren Sie unsere Adresse:"};
 const U = s => (lang==='de' && UI_DE[s] != null) ? UI_DE[s] : s;
 
+const COPYIC = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 // Text with [PLACEHOLDER] markers shown as "To confirm" chips
 const tx = s => esc(s).replace(/\[([^\]]+)\]/g, (_, m) => `<span class="tbc" title="${m}">${U('To confirm')}</span>`)
@@ -365,7 +366,7 @@ const notes = (p, label='Add a note') => `<div class="notes">${(get(p)||[]).map(
 const rsvp = () => {
   if (!D.rsvp) return '';
   const d = cphNow().date, open = editing || !D.rsvp.until || d < D.rsvp.until;
-  const btn = editing ? `<span class="rsvp-btn">${T('rsvp.btn')}</span><span class="muted">Email link: ${T('rsvp.href')}</span>` : `<div class="rsvp-act"><a class="rsvp-btn" href="${esc(D.rsvp.href)}">${esc(D.rsvp.btn)} →</a>${D.rsvp.email?`<div class="rsvp-copy"><code>${esc(D.rsvp.email)}</code><button type="button" class="copy copyic" data-copy="${esc(D.rsvp.email)}" aria-label="${U('Copy')} ${esc(D.rsvp.email)}"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span class="cl">${U('Copy')}</span></button></div>`:''}</div>`;
+  const btn = editing ? `<span class="rsvp-btn">${T('rsvp.btn')}</span><span class="muted">Email link: ${T('rsvp.href')}</span>` : `<div class="rsvp-act"><a class="rsvp-btn" href="${esc(D.rsvp.href)}">${esc(D.rsvp.btn)} →</a>${D.rsvp.email?`<div class="rsvp-copy"><code>${esc(D.rsvp.email)}</code><button type="button" class="copy copyic" data-copy="${esc(D.rsvp.email)}" aria-label="${U('Copy')} ${esc(D.rsvp.email)}">${COPYIC}<span class="cl">${U('Copy')}</span></button></div>`:''}</div>`;
   const main = open ? `<div class="rsvp"><div class="rsvp-txt"><h2>${T('rsvp.h')}</h2><p>${T('rsvp.b')}</p><p class="rsvp-dl">${T('rsvp.deadline')}</p></div>${btn}</div>` : '';
   const after = D.rsvp.after && (editing || (!open && (!D.rsvp.after.until || d <= D.rsvp.after.until)))
     ? `<div class="rsvp rsvp-after">${editing?'<span class="muted">Shown instead from '+esc(D.rsvp.until)+' until '+esc(D.rsvp.after.until||'')+':</span>':''}<div class="rsvp-txt"><h2>${T('rsvp.after.h')}</h2><p>${T('rsvp.after.b')}</p></div></div>` : '';
@@ -561,7 +562,7 @@ V.contacts = () => `
   <section>
     <h2>${U('Contacts')}</h2>
     <div class="grid">${D.contacts.map((c,i)=>`<div class="panel contact"><div class="edrow"><h3>${T(`contacts.${i}.name`)}</h3>${DEL(`contacts.${i}`)}</div><span class="role">${T(`contacts.${i}.role`)}</span>
-      ${(c.lines||[]).map((l,j)=>`<div class="line"><code>${T(`contacts.${i}.lines.${j}`)}</code>${editing?DEL(`contacts.${i}.lines.${j}`):`<button type="button" class="copy" data-copy="${esc(l)}">${U('Copy')}</button>`}</div>`).join('')}
+      ${(c.lines||[]).map((l,j)=>`<div class="line"><code>${T(`contacts.${i}.lines.${j}`)}</code>${editing?DEL(`contacts.${i}.lines.${j}`):`<button type="button" class="copy copyic" data-copy="${esc(l)}" aria-label="${U('Copy')} ${esc(l)}">${COPYIC}<span class="cl">${U('Copy')}</span></button>`}</div>`).join('')}
       ${ADD(`contacts.${i}.lines`,'Add a number or email')}
       ${c.web&&!editing?`<a class="btnlink" href="https://${esc(c.web)}" target="_blank" rel="noopener">${esc(c.web)} ↗</a>`:''}</div>`).join('')}</div>
     ${ADD('contacts','Add a contact')}
